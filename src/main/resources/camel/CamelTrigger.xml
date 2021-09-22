@@ -1,0 +1,6 @@
+<routes xmlns="http://camel.apache.org/schema/spring">
+	<route id="cameltrigger">
+		<from uri="timer://foo?repeatCount=1"/>
+ 		<to uri="seda://CamelTrendSearch"/>
+	</route>
+</routes>

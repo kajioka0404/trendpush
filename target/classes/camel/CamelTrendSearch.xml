@@ -1,0 +1,40 @@
+<routes xmlns="http://camel.apache.org/schema/spring">
+	<route id="cameltrendsearch">
+		<from uri="seda://CamelTrendSearch"/>
+		<setHeader name="OutputFlg">
+			<simple>false</simple>
+		</setHeader>
+		<setHeader name="Siteurl">
+			<simple>{{siteurl}}</simple>
+		</setHeader>
+		<setHeader name="Keyword">
+			<simple>{{keyword}}</simple>
+		</setHeader>
+		<!-- 指定のキーワードがトレンドに検出されるまで一定間隔でループ -->
+		<loop doWhile="true" copy="true">
+			<simple>${header.OutputFlg} == 'false'</simple>
+ 			<process ref="JsoupProcessor"/>
+ 			<choice>
+ 				<when>
+					<simple>${header.OutputFlg} == 'true'</simple>
+ 					<to uri="direct://CamelTwilio"/>
+ 					<!--  <log message="dummy direct://CamelTwilio"/> -->
+ 				</when>
+ 			</choice>
+ 			<!-- <to uri="log:in?showAll=true&amp;multiline=true"/> -->
+ 			<delay>
+ 				<simple>{{delaytime}}</simple>
+ 			</delay>
+ 		</loop>
+
+		<!-- 一度、検出後は一定時間経過後、再検索を行う -->
+		<delay>
+			<simple>{{longdelaytime}}</simple>
+		</delay>
+		<setHeader name="OutputFlg">
+			<simple>false</simple>
+		</setHeader>
+		<to uri="seda://CamelTrendSearch"/>
+
+	</route>
+</routes>
