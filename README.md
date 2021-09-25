@@ -15,4 +15,4 @@
   longdelaytime：キーワード検出後、次回検索までのdelay[ms]<br>
   delaytime：キーワード未検出時の次回検索までのdelay[ms]
 1. ビルド実行
-1. デプロイ"# trendpush" 
+1. デプロイ
